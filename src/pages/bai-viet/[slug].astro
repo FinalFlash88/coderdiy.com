@@ -1,0 +1,24 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostContent from '../../components/PostContent.astro';
+import { routes } from '../../i18n/ui';
+import { getPostsByLang, slugOf, getTranslationSlug } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPostsByLang('vi');
+  return posts.map((post) => ({ params: { slug: slugOf(post) }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const lang = 'vi' as const;
+const { Content } = await render(post);
+
+const translationSlug = await getTranslationSlug(post);
+const altPath = translationSlug ? `${routes.en.postBase}${translationSlug}/` : '/en/';
+const translationHref = translationSlug ? `${routes.en.postBase}${translationSlug}/` : undefined;
+---
+
+<BaseLayout lang={lang} title={post.data.title} description={post.data.description} altPath={altPath} ogType="article">
+  <PostContent post={post} lang={lang} Content={Content} translationHref={translationHref} />
+</BaseLayout>

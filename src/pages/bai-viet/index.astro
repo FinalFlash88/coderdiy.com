@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostListing from '../../components/PostListing.astro';
+import { useTranslations } from '../../i18n/ui';
+import { getPostsByCategory } from '../../lib/posts';
+
+const lang = 'vi' as const;
+const t = useTranslations(lang);
+const posts = await getPostsByCategory(lang, 'article');
+---
+
+<BaseLayout lang={lang} title={t('list.articles.title')} description={t('list.articles.subtitle')} altPath="/en/articles/">
+  <PostListing lang={lang} title={t('list.articles.title')} subtitle={t('list.articles.subtitle')} posts={posts} />
+</BaseLayout>

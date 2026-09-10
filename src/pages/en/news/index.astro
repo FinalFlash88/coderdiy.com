@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PostListing from '../../../components/PostListing.astro';
+import { useTranslations } from '../../../i18n/ui';
+import { getPostsByCategory } from '../../../lib/posts';
+
+const lang = 'en' as const;
+const t = useTranslations(lang);
+const posts = await getPostsByCategory(lang, 'news');
+---
+
+<BaseLayout lang={lang} title={t('list.news.title')} description={t('list.news.subtitle')} altPath="/tin-tuc/">
+  <PostListing lang={lang} title={t('list.news.title')} subtitle={t('list.news.subtitle')} posts={posts} />
+</BaseLayout>

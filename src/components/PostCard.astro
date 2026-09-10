@@ -1,0 +1,52 @@
+---
+import { routes, useTranslations, type Lang } from '../i18n/ui';
+import { slugOf, type Post } from '../lib/posts';
+
+interface Props {
+  post: Post;
+  lang: Lang;
+  featured?: boolean;
+}
+
+const { post, lang, featured = false } = Astro.props;
+const t = useTranslations(lang);
+const href = `${routes[lang].postBase}${slugOf(post)}/`;
+const isNews = post.data.category === 'news';
+const dateFormatted = post.data.pubDate.toLocaleDateString(lang === 'vi' ? 'vi-VN' : 'en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<a
+  href={href}
+  class:list={[
+    'group flex flex-col overflow-hidden rounded-2xl border border-border bg-bg-soft transition-shadow hover:shadow-lg',
+    featured ? 'sm:flex-row' : '',
+  ]}
+>
+  <div
+    class:list={[
+      'grid-bg flex shrink-0 items-center justify-center text-4xl',
+      featured ? 'sm:w-64 sm:text-6xl aspect-[16/9] sm:aspect-auto' : 'aspect-[16/9]',
+    ]}
+    style={`background-color: color-mix(in srgb, var(--color-${isNews ? 'news' : 'article'}) 12%, var(--color-bg-soft));`}
+  >
+    {post.data.heroEmoji}
+  </div>
+  <div class="flex flex-1 flex-col gap-2 p-5">
+    <div class="flex items-center gap-2 text-xs font-medium">
+      <span
+        class:list={['rounded-full px-2 py-0.5', isNews ? 'bg-news-soft text-news' : 'bg-article-soft text-article']}
+      >
+        {isNews ? t('category.news') : t('category.article')}
+      </span>
+      <time datetime={post.data.pubDate.toISOString()} class="text-ink-soft">{dateFormatted}</time>
+    </div>
+    <h3 class:list={['font-display font-bold leading-snug group-hover:text-accent', featured ? 'text-2xl' : 'text-lg']}>
+      {post.data.title}
+    </h3>
+    <p class="line-clamp-2 text-sm text-ink-soft">{post.data.description}</p>
+  </div>
+</a>

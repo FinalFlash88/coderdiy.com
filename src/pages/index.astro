@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { routes, useTranslations } from '../i18n/ui';
+import { getPostsByCategory } from '../lib/posts';
+
+const lang = 'vi' as const;
+const t = useTranslations(lang);
+const r = routes[lang];
+
+const news = (await getPostsByCategory(lang, 'news')).slice(0, 3);
+const articles = (await getPostsByCategory(lang, 'article')).slice(0, 3);
+---
+
+<BaseLayout lang={lang} title={t('site.tagline')} description={t('site.description')} altPath="/en/">
+  <section class="grid-bg border-b border-border">
+    <div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
+      <p class="font-mono text-sm font-medium text-accent">{t('home.hero.eyebrow')}</p>
+      <h1 class="mt-3 max-w-2xl font-display text-4xl font-bold leading-tight sm:text-5xl">
+        {t('home.hero.title')}
+      </h1>
+      <p class="mt-4 max-w-xl text-lg text-ink-soft">{t('home.hero.subtitle')}</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href={r.articles} class="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink">
+          {t('home.hero.cta.articles')}
+        </a>
+        <a href={r.news} class="rounded-full border border-border px-5 py-2.5 text-sm font-semibold hover:bg-bg-soft">
+          {t('home.hero.cta.news')}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+    <div class="flex items-center justify-between">
+      <h2 class="font-display text-2xl font-bold">{t('home.latestArticles')}</h2>
+      <a href={r.articles} class="text-sm font-medium text-accent hover:underline">{t('home.viewAll')} &rarr;</a>
+    </div>
+    <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {articles.map((post) => <PostCard post={post} lang={lang} />)}
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-4 pb-14 sm:px-6">
+    <div class="flex items-center justify-between">
+      <h2 class="font-display text-2xl font-bold">{t('home.latestNews')}</h2>
+      <a href={r.news} class="text-sm font-medium text-accent hover:underline">{t('home.viewAll')} &rarr;</a>
+    </div>
+    <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {news.map((post) => <PostCard post={post} lang={lang} />)}
+    </div>
+  </section>
+
+  <section class="border-t border-border bg-bg-soft">
+    <div class="mx-auto max-w-5xl px-4 py-14 text-center sm:px-6">
+      <h2 class="font-display text-2xl font-bold">{t('home.forum.title')}</h2>
+      <p class="mx-auto mt-3 max-w-xl text-ink-soft">{t('home.forum.body')}</p>
+      <a href={r.forum} class="mt-6 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink">
+        {t('home.forum.cta')}
+      </a>
+    </div>
+  </section>
+</BaseLayout>

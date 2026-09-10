@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../../i18n/ui';
+import { SITE } from '../../../lib/site';
+
+const lang = 'en' as const;
+const t = useTranslations(lang);
+---
+
+<BaseLayout lang={lang} title={t('about.title')} description={t('site.description')} altPath="/gioi-thieu/">
+  <section class="mx-auto max-w-3xl px-4 py-14 sm:px-6">
+    <h1 class="font-display text-3xl font-bold sm:text-4xl">{t('about.title')}</h1>
+    <div class="prose-diy mt-6">
+      <p>{t('about.body1')}</p>
+      <p>{t('about.body2')}</p>
+    </div>
+    <div class="mt-8 rounded-xl border border-border bg-bg-soft p-5 text-sm text-ink-soft">
+      <p>{t('about.contact')}: <a href={`mailto:hello@${SITE.domain}`} class="text-accent hover:underline">hello@{SITE.domain}</a></p>
+    </div>
+  </section>
+</BaseLayout>

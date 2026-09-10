@@ -1,0 +1,56 @@
+---
+import { SITE } from '../lib/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const { repo, repoId, category, categoryId, configured } = SITE.giscus;
+---
+
+<section id="comments" class="mt-14 border-t border-border pt-10">
+  <h2 class="font-display text-xl font-bold">{t('post.comments.title')}</h2>
+
+  {configured ? (
+    <div
+      class="giscus mt-4"
+      data-repo={repo}
+      data-repo-id={repoId}
+      data-category={category}
+      data-category-id={categoryId}
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang={lang === 'vi' ? 'vi' : 'en'}
+    >
+      <script is:inline src="https://giscus.app/client.js" data-loading="lazy" crossorigin="anonymous" async></script>
+    </div>
+  ) : (
+    <p class="mt-4 rounded-xl border border-dashed border-border bg-bg-soft p-4 text-sm text-ink-soft">
+      {t('post.comments.notConfigured')}
+    </p>
+  )}
+</section>
+
+<script is:inline>
+  // Keep giscus in sync with the manual light/dark toggle.
+  (function () {
+    function sendTheme() {
+      var isDark = document.documentElement.classList.contains('dark');
+      var iframe = document.querySelector('iframe.giscus-frame');
+      if (!iframe) return;
+      iframe.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: isDark ? 'dark' : 'light' } } },
+        'https://giscus.app'
+      );
+    }
+    var btn = document.getElementById('theme-toggle');
+    if (btn) btn.addEventListener('click', function () { setTimeout(sendTheme, 50); });
+  })();
+</script>

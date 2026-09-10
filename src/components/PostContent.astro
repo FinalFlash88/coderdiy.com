@@ -1,0 +1,75 @@
+---
+import { routes, useTranslations, type Lang } from '../i18n/ui';
+import Comments from './Comments.astro';
+import type { Post } from '../lib/posts';
+
+interface Props {
+  post: Post;
+  lang: Lang;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Content: any;
+  translationHref?: string;
+}
+
+const { post, lang, Content, translationHref } = Astro.props;
+const t = useTranslations(lang);
+const r = routes[lang];
+const isNews = post.data.category === 'news';
+
+const dateFmt = (d: Date) =>
+  d.toLocaleDateString(lang === 'vi' ? 'vi-VN' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<article class="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
+  <a href={isNews ? r.news : r.articles} class="text-sm font-medium text-ink-soft hover:text-ink">
+    &larr; {t('post.backToList')}
+  </a>
+
+  <div class="mt-4 flex items-center gap-2 text-xs font-medium">
+    <span class:list={['rounded-full px-2 py-0.5', isNews ? 'bg-news-soft text-news' : 'bg-article-soft text-article']}>
+      {isNews ? t('category.news') : t('category.article')}
+    </span>
+  </div>
+
+  <h1 class="mt-3 font-display text-3xl font-bold leading-tight sm:text-4xl">{post.data.title}</h1>
+
+  <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft">
+    <span>{t('post.author')}: {post.data.author}</span>
+    <span>·</span>
+    <time datetime={post.data.pubDate.toISOString()}>{t('post.publishedOn')} {dateFmt(post.data.pubDate)}</time>
+    {post.data.updatedDate && (
+      <>
+        <span>·</span>
+        <time datetime={post.data.updatedDate.toISOString()}>{t('post.updatedOn')} {dateFmt(post.data.updatedDate)}</time>
+      </>
+    )}
+    {translationHref && (
+      <>
+        <span>·</span>
+        <a href={translationHref} class="text-accent hover:underline">{t('post.otherLang')}</a>
+      </>
+    )}
+  </div>
+
+  <div
+    class="grid-bg my-8 flex aspect-[21/9] items-center justify-center rounded-2xl text-7xl"
+    style={`background-color: color-mix(in srgb, var(--color-${isNews ? 'news' : 'article'}) 12%, var(--color-bg-soft));`}
+  >
+    {post.data.heroEmoji}
+  </div>
+
+  <div class="prose-diy">
+    <Content />
+  </div>
+
+  {post.data.tags.length > 0 && (
+    <div class="mt-10 flex flex-wrap items-center gap-2 border-t border-border pt-6 text-sm">
+      <span class="text-ink-soft">{t('post.tags')}:</span>
+      {post.data.tags.map((tag) => (
+        <span class="rounded-full border border-border px-2.5 py-0.5 font-mono text-xs text-ink-soft">#{tag}</span>
+      ))}
+    </div>
+  )}
+
+  <Comments lang={lang} />
+</article>

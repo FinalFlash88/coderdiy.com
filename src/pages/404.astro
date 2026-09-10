@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { useTranslations } from '../i18n/ui';
+
+const lang = 'vi' as const;
+const t = useTranslations(lang);
+const tEn = useTranslations('en');
+---
+
+<BaseLayout lang={lang} title={t('404.title')} description={t('404.body')} altPath="/en/">
+  <section class="mx-auto flex max-w-xl flex-col items-center px-4 py-24 text-center sm:px-6">
+    <p class="font-mono text-6xl font-bold text-accent">404</p>
+    <h1 class="mt-4 font-display text-2xl font-bold">{t('404.title')}</h1>
+    <p class="mt-2 text-ink-soft">{t('404.body')}</p>
+    <a href="/" class="mt-6 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink">{t('404.cta')}</a>
+
+    <div class="mt-10 border-t border-border pt-6">
+      <h2 class="font-display text-lg font-bold">{tEn('404.title')}</h2>
+      <p class="mt-1 text-sm text-ink-soft">{tEn('404.body')}</p>
+      <a href="/en/" class="mt-3 inline-block text-sm font-semibold text-accent hover:underline">{tEn('404.cta')} &rarr;</a>
+    </div>
+  </section>
+</BaseLayout>

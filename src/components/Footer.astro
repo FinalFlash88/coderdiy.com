@@ -1,0 +1,47 @@
+---
+import { routes, useTranslations, type Lang } from '../i18n/ui';
+import { SITE } from '../lib/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const r = routes[lang];
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-border">
+  <div class="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <a href={r.home} class="flex items-center gap-2 font-display text-base font-bold">
+          <span class="flex h-7 w-7 items-center justify-center rounded-md bg-accent text-accent-ink text-xs">&lt;/&gt;</span>
+          {SITE.name}
+        </a>
+        <p class="mt-2 max-w-xs text-sm text-ink-soft">{t('footer.tagline')}</p>
+      </div>
+
+      <div class="flex gap-10 text-sm">
+        <div class="flex flex-col gap-2">
+          <a href={r.news} class="text-ink-soft hover:text-ink">{t('nav.news')}</a>
+          <a href={r.articles} class="text-ink-soft hover:text-ink">{t('nav.articles')}</a>
+          <a href={r.forum} class="text-ink-soft hover:text-ink">{t('nav.forum')}</a>
+        </div>
+        <div class="flex flex-col gap-2">
+          <a href={r.about} class="text-ink-soft hover:text-ink">{t('nav.about')}</a>
+          <a href={r.rss} class="text-ink-soft hover:text-ink">RSS</a>
+          {SITE.socials.github && (
+            <a href={SITE.socials.github} target="_blank" rel="noopener noreferrer" class="text-ink-soft hover:text-ink">GitHub</a>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 flex flex-col gap-1 border-t border-border pt-6 text-xs text-ink-soft sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {SITE.domain} — {t('footer.rights')}</p>
+      <p>{t('footer.builtWith')}</p>
+    </div>
+  </div>
+</footer>

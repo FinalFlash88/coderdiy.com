@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { useTranslations } from '../../../i18n/ui';
+import { getPostsByLang } from '../../../lib/posts';
+
+const lang = 'en' as const;
+const t = useTranslations(lang);
+const posts = await getPostsByLang(lang);
+---
+
+<BaseLayout lang={lang} title={t('forum.title')} description={t('forum.subtitle')} altPath="/dien-dan/">
+  <section class="mx-auto max-w-3xl px-4 py-14 sm:px-6">
+    <h1 class="font-display text-3xl font-bold sm:text-4xl">{t('forum.title')}</h1>
+    <p class="mt-2 text-ink-soft">{t('forum.subtitle')}</p>
+    <div class="prose-diy mt-6">
+      <p>{t('forum.body1')}</p>
+      <p>{t('forum.body2')}</p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-4 pb-14 sm:px-6">
+    <h2 class="font-display text-xl font-bold">{t('forum.browse')}</h2>
+    <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post) => <PostCard post={post} lang={lang} />)}
+    </div>
+  </section>
+</BaseLayout>
